@@ -31,7 +31,7 @@
 % Moritz Schappler, schappler@irt.uni-hannover.de, 2015-02
 % (c) Institut für Regelungstechnik, Universität Hannover
 
-function [ew_t, ew_Q, w_t, w_Q] = Trapez_nAbl_Multi(q0, qT, qmax, T_Abt, debug)
+function [ew_t, ew_Q, w_t, w_Q] = traj_trapezN(q0, qT, qmax, T_Abt, debug)
 
 %% Init
 n = size(q0,2); % Anzahl der Achsen
@@ -44,7 +44,7 @@ ew_Q = NaN(net,m+1,n);
 %% Berechne einzelne Trapeztrajektorie für jedes Gelenk
 for i = 1:n
   % Berechne Trapezprofil für Achse i
-  [ew_t_i, ew_z_i] = Trapez_nAbl(q0(:,i), qT(:,i), 0, qmax(:,i), T_Abt, debug);
+  [ew_t_i, ew_z_i] = traj_trapezN_single(q0(:,i), qT(:,i), 0, qmax(:,i), T_Abt, debug);
   
   % Speichern
   tmp_t(:,i) = ew_t_i;
@@ -83,7 +83,7 @@ for i = 1:n
     ew_Q(2:end,1:end-1,i) = NaN;
 
     % Berechnung der Eckwerte und feinaufgelösten Trajektorien
-    [w_Q(:,:,i), ew_Q(:,:,i)] = Trapez_nAbl_Werte(ew_t, ew_Q(:,:,i), w_t);
+    [w_Q(:,:,i), ew_Q(:,:,i)] = traj_trapezN_values(ew_t, ew_Q(:,:,i), w_t);
 
     % Prüfe die Endposition der Trajektorie, kann sich durch Integration
     % der Numerik-Fehler verändern

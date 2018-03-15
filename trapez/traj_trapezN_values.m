@@ -19,7 +19,7 @@
 
 
 
-function [w_z, ew_z] = Trapez_nAbl_Werte(ew_t, ew_z, w_t)
+function [w_z, ew_z] = traj_trapezN_values(ew_t, ew_z, w_t)
 
 
 %% Initialisierung 

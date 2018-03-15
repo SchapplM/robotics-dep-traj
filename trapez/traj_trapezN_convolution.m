@@ -28,7 +28,7 @@
 % Institut für mechatronische Systeme, Universität Hannover
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
-function [ew_t, ew_z, w_z, w_t] = Trapez_nAbl_Faltung(z0, zT, t0, zmax, T_Abt, debug)
+function [ew_t, ew_z, w_z, w_t] = traj_trapezN_convolution(z0, zT, t0, zmax, T_Abt, debug)
 
 % Beispiel aus [1], S.7
 % z0=[0, 0, 0, 0, 0,0];
@@ -115,7 +115,7 @@ t = max(ceil(t/T_Abt)*T_Abt, T_Abt);
 for l = n+2:-1:0%0:n+2
     i = l+1;
     if t(i) < sum(t(i+1:end))
-        fprintf('Verschliffzeiten: [%s] ms\n', dispparam(1e3*t', '%1.3f'));
+        fprintf('Verschliffzeiten: [%s] ms\n', disp_array(1e3*t', '%1.3f'));
         error('Die Zeit t%d (%f) ist kleiner als die Summe t%d bis t%d (%f). Passe an!', ...
             l, t(i), l+1, n+2, sum(t(i+1:n+3)));
         % t(i) = sum(t(i+1:end)) + T_Abt;
@@ -338,10 +338,10 @@ y_nach2(:, 1:nz-1) = [y_nach2([2:end,end], 1:nz-1)];
 if debug 
     % Zwischenwerte zum Zeichnen mit berechnen
     w_t_fein = (0:1e-3:w_t(end))';
-    [w_z_fein, ~] = Trapez_nAbl_Werte(ew_t, ew_z, w_t_fein);
-%     [w_z_neu_fein, ew_z_neu_int] = Trapez_nAbl_Werte(ew_t, ew_z_neu, w_t_fein);
+    [w_z_fein, ~] = traj_trapezN_values(ew_t, ew_z, w_t_fein);
+%     [w_z_neu_fein, ew_z_neu_int] = traj_trapezN_values(ew_t, ew_z_neu, w_t_fein);
 else
-    [~, ew_z] = Trapez_nAbl_Werte(ew_t, ew_z, 0);
+    [~, ew_z] = traj_trapezN_values(ew_t, ew_z, 0);
 end
 % w_t_fein = w_t;
 % w_z_fein = y_nach;
@@ -403,7 +403,7 @@ for i = 1:3
         % Alle Eckzeiten lassen, alle Eckpunkte ändern (manuell).
         ew_z(:,nz+1) = ew_z(:,nz+1) * zmax(nz+1)/zm_vorher;
         ew_z(2:end,1:nz) = NaN; % Eckwerte zurücksetzen
-        [~, ew_z] = Trapez_nAbl_Werte(ew_t, ew_z, 0);
+        [~, ew_z] = traj_trapezN_values(ew_t, ew_z, 0);
         if debug
             fprintf('Grenzwert Abl. %d neu gesetzt: %1.4e -> %1.4e\n', ...
                 nz, zm_vorher, zmax(nz+1));
@@ -446,8 +446,8 @@ ew_z(end,1:nz) = zT(1:nz);
 % Berechne Zwischenwerte, falls gefordert
 if nargout >= 3
     w_t = t0:T_Abt:ew_t(end);
-    w_z = Trapez_nAbl_Werte(ew_t, ew_z, w_t);
+    w_z = traj_trapezN_values(ew_t, ew_z, w_t);
 end
 
 % Berechne die korrekten Eckwerte
-[~, ew_z] = Trapez_nAbl_Werte(ew_t, ew_z, 0);
+[~, ew_z] = traj_trapezN_values(ew_t, ew_z, 0);

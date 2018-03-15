@@ -25,7 +25,7 @@
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
 
-function [ew_t, ew_z] = Trapez_nAbl_Analytisch(z0, zT, t0, zmax, T_Abt, debug)
+function [ew_t, ew_z] = traj_trapezN_analytic(z0, zT, t0, zmax, T_Abt, debug)
 %% Initialisierung
 nz = length(z0);
 
@@ -110,7 +110,7 @@ ew_z(1, 1:nz) = z0(1:nz)';
 ew_z(end, 1:nz) = zT(1:nz)'; 
 
 % restliche Werte durch Integration    
-[~, ew_z] = Trapez_nAbl_Werte(ew_t, ew_z, 0); 
+[~, ew_z] = traj_trapezN_values(ew_t, ew_z, 0); 
 
 ew_t = ew_t + t0;
 
@@ -121,7 +121,7 @@ ew_t = ew_t + t0;
 if debug
     figure(2);clf;
     w_t_fein = (t0:1e-5:ew_t(end))';
-    [w_z_fein, ~] = Trapez_nAbl_Werte(ew_t, ew_z, w_t_fein);
+    [w_z_fein, ~] = traj_trapezN_values(ew_t, ew_z, w_t_fein);
 %     for iz=nz+1:-1:1
 %         ax(iz)=subplot(nz+1, 1, iz);hold all;
 %         plot(tt, dj(end, 2:2:end), 'o')

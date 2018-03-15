@@ -26,7 +26,7 @@
 % Institut für mechatronische Systeme, Universität Hannover
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
-function [ew_t, ew_z, w_z, w_t] = Trapez_nAbl(z0, zT, t0, zmax, T_Abt, debug)
+function [ew_t, ew_z, w_z, w_t] = traj_trapezN_single(z0, zT, t0, zmax, T_Abt, debug)
 %% Vorbereiten
 nz = length(z0);
 
@@ -46,14 +46,14 @@ Tv = zmax(1:end-1)./zmax(2:end);
 
 %% Berechnen
 if nz < 5 && nz ~= 2
-    [ew_t, ew_z] = Trapez_nAbl_Analytisch(z0, zT, t0, zmax, T_Abt, debug);
+    [ew_t, ew_z] = traj_trapezN_analytic(z0, zT, t0, zmax, T_Abt, debug);
 else
 %     try
-%         [ew_t, ew_z] = Trapez_nAbl_Iterativ(z0, zT, t0, zmax, Tmin, T_Abt, 0);
+%         [ew_t, ew_z] = traj_trapezN_single_Iterativ(z0, zT, t0, zmax, Tmin, T_Abt, 0);
 %     catch e
-%         warning('Trapez_nAbl:Iterativ_Fehler', 'Fehler beim iterativen Lösen');
+%         warning('traj_trapezN_single:Iterativ_Fehler', 'Fehler beim iterativen Lösen');
 %         getReport (e)
-        [ew_t, ew_z] = Trapez_nAbl_Faltung(z0, zT, t0, zmax, T_Abt, debug);
+        [ew_t, ew_z] = traj_trapezN_convolution(z0, zT, t0, zmax, T_Abt, debug);
 %     end
 end
 
@@ -112,5 +112,5 @@ end
 % Berechne Zwischenwerte, falls gefordert
 if nargout >= 3
     w_t = (t0:T_Abt:ew_t(end))';
-    w_z = Trapez_nAbl_Werte(ew_t, ew_z, w_t);
+    w_z = traj_trapezN_values(ew_t, ew_z, w_t);
 end

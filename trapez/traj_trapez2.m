@@ -59,7 +59,7 @@ elseif length(T3) ~= N
 end
 
 % calculate trapezoid trajectory
-[~, ~, w_t, w_Q] = Trapez_nAbl_Multi([q_Start; zeros(2,N)], ...
+[~, ~, w_t, w_Q] = traj_trapezN([q_Start; zeros(2,N)], ...
 [q_End; zeros(2,N)], [q_End; vmax; vmax./T2; vmax./(T2.*T3)],T_Abt, false);
 
 % Ausgabegrößen zuweisen
