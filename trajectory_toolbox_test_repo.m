@@ -13,6 +13,7 @@ addpath(fullfile(this_repo_path, 'examples_tests'));
 
 cone_rotation_trajectory_example
 trapezoid_trajectory_example
+polynom_trajectory_example
 
 clc
 close all

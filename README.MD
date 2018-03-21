@@ -22,6 +22,7 @@ Die einzelnen Funktionen des Repos können über die Modultests aus dem Ordner `
 Hier erfolgt eine kurze Übersicht der im Repo enthaltenen Funktionen. Die Funktionsweise ist in den jeweiligen Funktionsdateien und Modultests erklärt.
 
 * Trapez-Profile beliebiger stetiger Differenzierbarkeit: `traj_trapezN.m`, `traj_trapezN_single.m`
+* Polynom-Profile beliebiger stetiger Differenzierbarkeit basierend auf Bernstein-Polynomen: `traj_polynomN_single.m`
 * Kegel-Trajektorie im Arbeitsraum: `traj_rot_cone_angaxis.m`
 
 ## Erweiterung
