@@ -24,14 +24,18 @@
 %   Velocity Trajectory 
 % qDD_Arm_Full [MxN]
 %   Acceleration Trajectory
+% t
+%   Zeit-Stützstellen der Trajektorie
+% IL [NP-1x1]
+%   Indizes der eingegebenen Eckwerte aus QL
 % 
 % TODO: Unterschiedliche Geschwindigkeiten etc. zwischen allen Teilstücken
 % (vektorielle Eingabe der Parameter)
 
 % Moritz Schappler, schappler@irt.uni-hannover.de, 2016-10
-% (c) Institut für Regelungstechnik, Universität Hannover
+% (C) Institut für Regelungstechnik, Universität Hannover
 
-function [Q,QD,QDD,t] = traj_trapez2_multipoint(QL, ...
+function [Q,QD,QDD,t,IL] = traj_trapez2_multipoint(QL, ...
   vmax, T2, T3, T_Abt, T_pause)
 
 Np = size(QL,1);
@@ -42,6 +46,7 @@ end
 Q = [];
 QD = [];
 QDD = [];
+IL = NaN(Np-1,1);
 t = [];
 for i = 2:Np
   % Gelenkwinkeltrajektorie generieren
@@ -51,7 +56,7 @@ for i = 2:Np
   if i > 2 % Wartezeit für die nächste Trajektorie anhängen
     Traj_i_t = Traj_i_t + T_pause(i-1)+t(end);
   end
-  
+  IL(i-1) = size(Q,1)+1;
   % Trajektorie anhängen
   Q = [Q; Traj_i_q]; %#ok<AGROW>
   QD = [QD; Traj_i_qD]; %#ok<AGROW>
