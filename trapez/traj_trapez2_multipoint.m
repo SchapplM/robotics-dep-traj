@@ -52,9 +52,9 @@ for i = 2:Np
   % Gelenkwinkeltrajektorie generieren
   [Traj_i_q, Traj_i_qD, Traj_i_qDD, Traj_i_t] = traj_trapez2(QL(i-1,:), QL(i,:), ...
     vmax, T2, T3, T_Abt);
-   
   if i > 2 % Wartezeit für die nächste Trajektorie anhängen
-    Traj_i_t = Traj_i_t + T_pause(i-1)+t(end);
+    % Mindestens Abtastzeit, sonst sind zwei Zeitschritte gleich
+    Traj_i_t = Traj_i_t + max(T_pause(i-1),T_Abt)+t(end);
   end
   IL(i-1) = size(Q,1)+1;
   % Trajektorie anhängen
