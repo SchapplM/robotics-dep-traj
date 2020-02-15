@@ -1,20 +1,20 @@
-% Berechne beliebige Zwischenwerte für die Trapez-Trajektorie der n. Abl.
+% Berechne beliebige Zwischenwerte fÃ¼r die Trapez-Trajektorie der n. Abl.
 % 
 % Eingabe
 % ew_t      Eckwerte der Zeiten
-% ew_z      Eckwerte der Größe z(1) und ihren Ableitungen z(2:end)
+% ew_z      Eckwerte der GrÃ¶ÃŸe z(1) und ihren Ableitungen z(2:end)
 % w_t       Zwischenwerte der Zeiten
 % 
 % Ausgabe
 % 
-% w_z       Zwischenwerte der Größe z(1) und ihren Ableitungen z(2:end) zu
+% w_z       Zwischenwerte der GrÃ¶ÃŸe z(1) und ihren Ableitungen z(2:end) zu
 %           den Zeiten w_t
 % ew_z      Mit Integration neu berechnete Eckwerte zu den Zeiten ew_t,
-%           ausgehend von den Zeiten und den Werten für die letzte Ableitung
+%           ausgehend von den Zeiten und den Werten fÃ¼r die letzte Ableitung
 % 
 % 
 % MA Moritz Schappler, schapplm@stud.uni-hannover.de, 2014-01
-% Institut für mechatronische Systeme, Universität Hannover
+% Institut fÃ¼r mechatronische Systeme, UniversitÃ¤t Hannover
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
 
@@ -42,16 +42,16 @@ nz = size(ew_z, 2)-1;
 %% Zwischenwerte iterativ durch Integration berechnen
 for it = 1:length(ew_t)-1
     % Indizes der Zeitpunkte in diesem Segment
-    % Werte der letzten <=-Bedingung werden in nächster Iteration überschrieben
+    % Werte der letzten <=-Bedingung werden in nÃ¤chster Iteration Ã¼berschrieben
     II = (ew_t(it) <= w_t) & (w_t <= ew_t(it+1)); 
     if ~any(II) && ~any(isnan(ew_z(it+1, :)))
         continue % keine Zeitwerte in diesem Bereich. Keine Integration notwendig
     end
     
     % Polynomkoeffizienten des Polynoms auf diesem Segment berechnen
-    polykoeff = zeros(nz+1, nz+1); % Polynomkoeffizienten: höchster zuerst
+    polykoeff = zeros(nz+1, nz+1); % Polynomkoeffizienten: hÃ¶chster zuerst
     polykoeff(nz+1, nz+1) = ew_z(it, nz+1); % letzte Ableitung ist konstant
-    % Integration von der höchsten Wegableitung z(nz+1) zum Weg z(1)
+    % Integration von der hÃ¶chsten Wegableitung z(nz+1) zum Weg z(1)
     for iz = nz:-1:1
         polykoeff(iz, :) = polyint(polykoeff(iz+1, 2:nz+1), ew_z(it, iz));
     end
@@ -64,14 +64,14 @@ for it = 1:length(ew_t)-1
     % Eckwerte des folgenden Zeitschritts berechnen (falls nicht gesetzt)
     for iz = 1:nz+1
         if isnan(ew_z(it+1, iz))
-            % nächsten Eckwert durch Integration im aktuellen Segment
+            % nÃ¤chsten Eckwert durch Integration im aktuellen Segment
             % berechnen
             ew_z(it+1, iz) = polyval(polykoeff(iz, :), ew_t(it+1)-ew_t(it));
         end
     end 
 end
 
-%% Zeiten außerhalb der Trajektorie abfangen
+%% Zeiten auÃŸerhalb der Trajektorie abfangen
 II = w_t < ew_t(1); % vor Beginn
 w_z(II, :) = repmat(ew_z(1, :), sum(II), 1);
 w_z(II, end) = 0;

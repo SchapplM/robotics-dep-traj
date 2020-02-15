@@ -1,20 +1,20 @@
-% Berechnung einer Trapez-Trajektorie für die n. Ableitung einer Größe.
+% Berechnung einer Trapez-Trajektorie fÃ¼r die n. Ableitung einer GrÃ¶ÃŸe.
 % 
-% Algorithmus basierend auf der mehrfachen Faltung der Zeitverläufe
+% Algorithmus basierend auf der mehrfachen Faltung der ZeitverlÃ¤ufe
 % 
 % Eingabe:
-% z0        Anfangswert für die Größe z(1) und alle Ableitungen (z(2), ...)
+% z0        Anfangswert fÃ¼r die GrÃ¶ÃŸe z(1) und alle Ableitungen (z(2), ...)
 % zT        Endwert ...
 % t0        Anfangszeit
-% zmax      Maximalwert für die Größe und alle Ableitungen 
+% zmax      Maximalwert fÃ¼r die GrÃ¶ÃŸe und alle Ableitungen 
 % T_Abt     Abtastzeit des Trapez-Profils. Die Eckzeiten sind ganzzahlige
 %           Vielfache der Abtastzeit
-% debug     Ausgabe zusätzlicher Informationen und Bilder
+% debug     Ausgabe zusÃ¤tzlicher Informationen und Bilder
 % 
 % Ausgabe:
 % ew_t      Eckwerte der Zeiten
-% ew_z      Eckwerte der Größe z(1) und ihren Ableitungen z(2:end)
-% w_z       Alle Werte der Größe z(1) und ihren Ableitungen z(2:end) 
+% ew_z      Eckwerte der GrÃ¶ÃŸe z(1) und ihren Ableitungen z(2:end)
+% w_z       Alle Werte der GrÃ¶ÃŸe z(1) und ihren Ableitungen z(2:end) 
 %           zu den Zwischenzeiten w_t. [n x (nz+1)]
 % w_t       Alle Zeitschritte von t0 bis zum Ende der Trajektorie mit dem
 %           Abstand T_Abt. [n x 1]
@@ -25,7 +25,7 @@
 
 
 % MA Moritz Schappler, schapplm@stud.uni-hannover.de, 2014-01
-% Institut für mechatronische Systeme, Universität Hannover
+% Institut fÃ¼r mechatronische Systeme, UniversitÃ¤t Hannover
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
 function [ew_t, ew_z, w_z, w_t] = traj_trapezN_convolution(z0, zT, t0, zmax, T_Abt, debug)
@@ -40,7 +40,7 @@ function [ew_t, ew_z, w_z, w_t] = traj_trapezN_convolution(z0, zT, t0, zmax, T_A
 
 
 
-if zT(1) < z0(1) % Berechnung für negative Berechnung analog zu positiver. Geschwindigkeiten etc. einfach invertieren
+if zT(1) < z0(1) % Berechnung fÃ¼r negative Berechnung analog zu positiver. Geschwindigkeiten etc. einfach invertieren
     minus = true;
     [z0, zT] = deal(zT,z0);% tausche Anfang und Ende
 elseif zT(1) == z0(1) % Keine Bewegung: sofortiges Beenden
@@ -52,7 +52,7 @@ else
 end
 
 
-% Zusätzliche RB hinzufügen mit minimaler Verschliffzeit
+% ZusÃ¤tzliche RB hinzufÃ¼gen mit minimaler Verschliffzeit
 % z0 = [z0; 0];
 % zT = [zT; 0];
 % zmax = [zmax; zmax(end)/T_Abt];
@@ -60,7 +60,7 @@ end
 nz = length(z0);
 
 
-% Maximalwerte der höchsten Ableitung anpassen
+% Maximalwerte der hÃ¶chsten Ableitung anpassen
 if length(zmax) == nz
     zmax = [zmax; zmax(nz)/T_Abt(nz)];
 else
@@ -74,7 +74,7 @@ else
 end
 
 
-% zmax_orig=zmax; % ursprüngliche Max-Werte speichern
+% zmax_orig=zmax; % ursprÃ¼ngliche Max-Werte speichern
 % zmin_orig = -zmax_orig;
 % zmin_orig(1) = z0(1);
 
@@ -83,7 +83,7 @@ zmax(1) = zT(1)-z0(1);
 zmin = -zmax;
 
 %%
-% [1], Seite 3; Es werden für Ableitungen der Geschwindigkeit bis zur
+% [1], Seite 3; Es werden fÃ¼r Ableitungen der Geschwindigkeit bis zur
 % Ordnung n Grenzen vorgegeben
 
 % Randbedingungen bis zur (nz-2). Ableitungen der Geschwindigkeit.
@@ -95,7 +95,7 @@ for k = 0:n+2
     i = k+1;
     t(i) = zmax(k+1) / zmax(k+2); % Probe: k=0 -> Weg/Geschwindigkeit
     
-    % Zeit an Abtastzeit anpassen und höhere Ableitung korrigieren
+    % Zeit an Abtastzeit anpassen und hÃ¶here Ableitung korrigieren
     t(i) = max(ceil(t(i)/T_Abt)*T_Abt, T_Abt);
     %if i>1
         zmax(k+2) = zmax(k+1)/t(i);
@@ -107,7 +107,7 @@ for k = 0:n+2
 end
 
 % [1], S. 4 oben:
-% Die Zeitlängen müssen ganzzahlige Vielfache der Abtastzeit sein!
+% Die ZeitlÃ¤ngen mÃ¼ssen ganzzahlige Vielfache der Abtastzeit sein!
 t = max(ceil(t/T_Abt)*T_Abt, T_Abt);
 % t(end)=2*t(end);
 % t(3)=10e-3;
@@ -137,7 +137,7 @@ w_t = (0:T_Abt:sum(t))';
 w_t = [w_t; w_t(end)+T_Abt*(1:nz-1+n_Zusatz)'];
 nS = length(w_t);
 
-%% Faltung für alle Ableitungen durchführen
+%% Faltung fÃ¼r alle Ableitungen durchfÃ¼hren
 % [1], Bild 1
 y_vorh = zeros(nS, nz+1);
 % Setze y0
@@ -149,12 +149,12 @@ y_vorh(w_t<t_Anf, 2)=0;
 y_vorh(w_t>=t_End, 2)=0;
 
 y_nach = y_vorh;
-% Schleife über durchführung der Faltung. 
+% Schleife Ã¼ber durchfÃ¼hrung der Faltung. 
 for i = 1:n+3
-    %% Faltung der Geschwindigkeit und aller verfügbaren Ableitungen durchführen
+    %% Faltung der Geschwindigkeit und aller verfÃ¼gbaren Ableitungen durchfÃ¼hren
     if i>1
-        % Schleife über Ableitungen der Geschwindigkeit
-        % [1], Formel (9); Zähler i statt n
+        % Schleife Ã¼ber Ableitungen der Geschwindigkeit
+        % [1], Formel (9); ZÃ¤hler i statt n
         for iz = 2:i
             % zuerst: Berechnung von yn mit n=1 (y0 ist konstant)
 
@@ -179,25 +179,25 @@ for i = 1:n+3
     end
     %% Weg integrieren
     % gefaltete Geschwindigkeit integrieren (wird als richtig
-    % angesehen) (numerischer Fehler, da Geschw. Polynom höheren Grades)
+    % angesehen) (numerischer Fehler, da Geschw. Polynom hÃ¶heren Grades)
     y_nach(:, 1) = cumtrapz(w_t, y_nach(:, 2));
     %% Gefaltete Ableitungen korrigieren
     % Alle Ableitungen der Geschwindigkeit, die im vorherigen Schritt
-    % gefaltet wurden, müssen korrigiert werden.
+    % gefaltet wurden, mÃ¼ssen korrigiert werden.
     for iz = 3:i
         % gefaltete Ableitung bis zum Weg integrieren
         s_Falt = y_nach(:, iz);
         for ia = 1:iz-1
             s_Falt = cumtrapz(w_t, s_Falt);
         end
-        % Korrekturfaktor aus dem Verhältnis Ist- und Soll-Weg bestimmen
+        % Korrekturfaktor aus dem VerhÃ¤ltnis Ist- und Soll-Weg bestimmen
         K_Korr = y_nach(end, 1) / s_Falt(end);
         % Korrigieren
         y_nach(:, iz) = K_Korr*y_nach(:, iz);
         continue;
         figure(1);clf;hold all;plot(s_Falt);plot(y_nach(:, 1))
     end
-    %% Nächste Verfügbare Ableitung der Geschwindigkeit bilden
+    %% NÃ¤chste VerfÃ¼gbare Ableitung der Geschwindigkeit bilden
     % Ableitung einer linearen Funktion = Rechteck (Ableitungen mit diff bilden)
     if i>1
         y_nach(:, i+1) = [diff(y_nach(:, i)); 0]/T_Abt; % ; 0
@@ -207,15 +207,15 @@ for i = 1:n+3
         y_nach(abs(y_nach(:, i+1))<0.1*max(y_nach(:, i+1)), i+1) = 0;
         
         % Ableitungen bereinigen: Darf nur einen konstanten Wert haben.
-        % Setze konstante Höhe des Rechtecks ab 90% der Rechteckhöhe
+        % Setze konstante HÃ¶he des Rechtecks ab 90% der RechteckhÃ¶he
         I_Rechteck = abs(y_nach(:, i+1))>0.9*max(y_nach(:, i+1));
         y_nach(I_Rechteck, i+1) = sign(y_nach(I_Rechteck, i+1)) * max(y_nach(:, i+1));
         
-        % Es dürften keine Werte mehr übrig sein, die keiner
+        % Es dÃ¼rften keine Werte mehr Ã¼brig sein, die keiner
         % Rechteckfunktion entsprechen
         if any( abs(y_nach(:, i+1)) >= 0.1*max(abs(y_nach(:, i+1))) & ...
                 abs(y_nach(:, i+1)) <= 0.9*max(abs(y_nach(:, i+1))) )
-            warning('Nach der Differentiation der gefalteten Funktion sind Werte übrig, die keiner Rechteckfunktion entsprechen! Fehler!');
+            warning('Nach der Differentiation der gefalteten Funktion sind Werte Ã¼brig, die keiner Rechteckfunktion entsprechen! Fehler!');
         end
     end
     %% Zeichnen
@@ -248,7 +248,7 @@ for i = 1:n+3
         end
         subplot_expand(gcf, nz+1, 1);%, ax);
     end    
-    % Variablen tauschen (für nächste Iteration)
+    % Variablen tauschen (fÃ¼r nÃ¤chste Iteration)
     y_vorh = y_nach;
 
 end
@@ -265,21 +265,21 @@ ew_z = NaN(sum(I), nz+1); % Vorbelegen
 % letzte Ableitung setzen
 ew_z(:, nz+1) = [y_nach(I(2:end-1), nz+1); 0];
 
-% andere Ableitungen auch übernehmen
+% andere Ableitungen auch Ã¼bernehmen
 % ew_z(:, 1:nz) = [y_nach(I(2:end-1), 1:nz); NaN(1,nz)];
 
 % die letzte Ableitung immer auf den gleichen Wert setzen.
 % ACHTUNG: Funktioniert nicht!
-% Dann ist der zurückgelegte Weg proportional zu diesem Wert.
+% Dann ist der zurÃ¼ckgelegte Weg proportional zu diesem Wert.
 % ew_z(end, :) = sign(ew_z(end, :)) * abs(ew_z(end, 1));
 
 % Anfangswerte setzen
 ew_z(1, 1:nz) = zeros(nz,1);%z0(1:nz); % Anfangsposition und -ableitungen
 
-% Fehlende Eckwerte ergänzen (Segmente mit Länge Null)
+% Fehlende Eckwerte ergÃ¤nzen (Segmente mit LÃ¤nge Null)
 % Die letzte Ableitung muss abwechselnd 1, 0, -1, 0, ... besitzen
 % problematisch, da zwei aufeinanderfolgende Rechtecke auch verschmelzen
-% können. Dann sind die Eckpunkte nicht mehr zuordnugnsfähig.
+% kÃ¶nnen. Dann sind die Eckpunkte nicht mehr zuordnugnsfÃ¤hig.
 % if length(ew_t) ~= 2^(nz)
 %     if debug
 %         fprintf('%d Segmente. Bei %d Randbedingungen: %d Segmente erwartet.\n', ...
@@ -299,10 +299,10 @@ ew_z(1, 1:nz) = zeros(nz,1);%z0(1:nz); % Anfangsposition und -ableitungen
 %             if ew_z(end, ii) == 0
 %                 iO = 1;
 %             else
-%                 % Null-Segment einfügen, was vorher nicht da war
+%                 % Null-Segment einfÃ¼gen, was vorher nicht da war
 %                 ew_t_neu(it) = ew_t(ii); % Zeitdauer Null
 %                 ew_z_neu(end,it) = 0;
-%                 iO = 0; % Ursprüngliche Daten nicht weiterzählen
+%                 iO = 0; % UrsprÃ¼ngliche Daten nicht weiterzÃ¤hlen
 %             end
 %         end
 %         if iO
@@ -311,7 +311,7 @@ ew_z(1, 1:nz) = zeros(nz,1);%z0(1:nz); % Anfangsposition und -ableitungen
 %             ii = ii+1; % Index der berechneten Werte ew_t
 %         end
 %     end
-%     % neu berechnete Trajektorie übernehmen
+%     % neu berechnete Trajektorie Ã¼bernehmen
 %     ew_z = ew_z_neu;
 %     ew_t = ew_t_neu;
 % end
@@ -321,7 +321,7 @@ ew_z(1, 1:nz) = zeros(nz,1);%z0(1:nz); % Anfangsposition und -ableitungen
 % ii = 1;
 % for iz = nz:-1:nz % funktioniert nicht mit niedrigeren Ableitungen
 %     % Anfangen mit Trapezprofil bei nz (alle 2^2-1=3 Eckwerte Null), dann
-%     % nächsthöheres: alle 2^3-1=7 Eckwerte Null, usw...)
+%     % nÃ¤chsthÃ¶heres: alle 2^3-1=7 Eckwerte Null, usw...)
 %     ii = ii+1;
 %     I1 = (0:(2^(ii)):2^nz);
 % 
@@ -380,7 +380,7 @@ end
 ew_t = ew_t + t0;
 w_t = w_t + t0;
 
-%% Ergebnis prüfen und korrigieren
+%% Ergebnis prÃ¼fen und korrigieren
 % Nullen am Anfang und Ende entfernen
 % I = ew_z(end, :) == 0
 
@@ -395,14 +395,14 @@ for i = 1:3
     if abs(ew_z(end,1)-zmax(1))>1e-6
         debug=1;
         if debug
-            fprintf('Der zurückgelegte Weg ist falsch. Soll: %f, Ist: %f. Verändere letzten Grenzwert.\n', ...
+            fprintf('Der zurÃ¼ckgelegte Weg ist falsch. Soll: %f, Ist: %f. VerÃ¤ndere letzten Grenzwert.\n', ...
                 zmax(1), ew_z(end,1));
         end
         zm_vorher = zmax(nz+1);
         zmax(nz+1) = abs((zmax(1)-ew_z(1,1))/(ew_z(end,1)-ew_z(1, 1))) * zmax(nz+1);
-        % Alle Eckzeiten lassen, alle Eckpunkte ändern (manuell).
+        % Alle Eckzeiten lassen, alle Eckpunkte Ã¤ndern (manuell).
         ew_z(:,nz+1) = ew_z(:,nz+1) * zmax(nz+1)/zm_vorher;
-        ew_z(2:end,1:nz) = NaN; % Eckwerte zurücksetzen
+        ew_z(2:end,1:nz) = NaN; % Eckwerte zurÃ¼cksetzen
         [~, ew_z] = traj_trapezN_values(ew_t, ew_z, 0);
         if debug
             fprintf('Grenzwert Abl. %d neu gesetzt: %1.4e -> %1.4e\n', ...
@@ -414,12 +414,12 @@ end
 % Anfangs-Weg wieder draufaddieren
 ew_z(:, 1) = ew_z(:, 1) + z0(1);
 
-if minus % Prüfe, ob Verlauf negativ ist
+if minus % PrÃ¼fe, ob Verlauf negativ ist
     ew_z(:,2:end) = - ew_z(:,2:end); % invertieren der Geschwindigkeiten
-    ew_z(:,1) = zT(1)+z0(1)-ew_z(:,1); % umkehren der Weg-Positionen. Ohne fliplr. Das führt zu Fehler
-    % tausche Anfang und Ende zurück, damit im nächten Schritt geprüft
+    ew_z(:,1) = zT(1)+z0(1)-ew_z(:,1); % umkehren der Weg-Positionen. Ohne fliplr. Das fÃ¼hrt zu Fehler
+    % tausche Anfang und Ende zurÃ¼ck, damit im nÃ¤chten Schritt geprÃ¼ft
     % werden kann
-    [z0, zT] = deal(zT,z0);% tausche Anfang und Ende zurück
+    [z0, zT] = deal(zT,z0);% tausche Anfang und Ende zurÃ¼ck
     
 %     plot(ew_t,ew_z(1, :))
 %     plot(ew_t,fliplr(ew_z(1, :)))
@@ -430,14 +430,14 @@ end
 
 
 
-% Prüfe, ob die Eckpunkte richtig sind
+% PrÃ¼fe, ob die Eckpunkte richtig sind
 
 FF = abs(ew_z(end,1:nz)'-zT(1:nz));
-Tol = 10.^(-6 +(1:nz))'; % bei höheren Ableitungen größere Toleranz
+Tol = 10.^(-6 +(1:nz))'; % bei hÃ¶heren Ableitungen grÃ¶ÃŸere Toleranz
 II = FF > Tol;
 if any(II)
     I = find(II,1);
-    error(['Der Fehler der Trajektorienberechnung bei Faltung ist größer als die Toleranz %e. ', ...
+    error(['Der Fehler der Trajektorienberechnung bei Faltung ist grÃ¶ÃŸer als die Toleranz %e. ', ...
         'Ist: z%d(T)=%f; Soll: z%d(T)=%f. Diff=%e'],Tol(I), I, ew_z(end,I) ,I, zT(I),FF(I));
 end
 % exakten Wert einsetzen, um Rundungsfehler zu eliminieren

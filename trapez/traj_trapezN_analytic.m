@@ -1,27 +1,28 @@
-% Berechnung einer Trapez-Trajektorie f�r die n. Ableitung einer Gr��e.
+% Berechnung einer Trapez-Trajektorie für die n. Ableitung einer Größe.
 % Die Berechnung erfolgt analytisch bis zur 4. Ordnung
 % 
 % 
 % Eingabe
-% z0        Anfangswert f�r die Gr��e z(1) und alle Ableitungen (z(2), ...)
+% z0        Anfangswert für die Größe z(1) und alle Ableitungen (z(2), ...)
 % zT        Endwert ...
 % t0        Anfangszeit
-% zmax      Maximalwert f�r die Gr��e und alle Ableitungen 
+% zmax      Maximalwert für die Größe und alle Ableitungen 
 % T_Abt     Abtastzeit des Trapez-Profils. Die Eckzeiten sind ganzzahlige
-% debug     Zus�tzliche Informationen ausgeben
+% debug     Zusätzliche Informationen ausgeben
 % 
 % Ausgabe
 % ew_t      Eckwerte der Zeiten [Nx1]
-% ew_z      Eckwerte der Gr��e z(1) und ihren Ableitungen z(2:end) 
+% ew_z      Eckwerte der Größe z(1) und ihren Ableitungen z(2:end) 
 %           [N x (nz+1)]
 % 
 % 
 % Quelle:
 % [1] Lambrechts 2003 - Trajectory planning and feedforward design for
 % electromechanical motion systems
+% https://de.mathworks.com/matlabcentral/fileexchange/16352-advanced-setpoints-for-motion-systems
 
 % MA Moritz Schappler, schapplm@stud.uni-hannover.de, 2014-01
-% Institut f�r mechatronische Systeme, Universit�t Hannover
+% Institut für Mechatronische Systeme, Universität Hannover
 % Betreuer: Daniel Beckmann, Daniel.Beckmann@imes.uni-hannover.de
 
 
@@ -30,8 +31,8 @@ function [ew_t, ew_z] = traj_trapezN_analytic(z0, zT, t0, zmax, T_Abt, debug)
 nz = length(z0);
 
 
-% Auf negativen Weg pr�fen
-if zT(1) < z0(1) % Berechnung f�r negative Berechnung analog zu positiver. Geschwindigkeiten etc. einfach invertieren
+% Auf negativen Weg prüfen
+if zT(1) < z0(1) % Berechnung für negative Berechnung analog zu positiver. Geschwindigkeiten etc. einfach invertieren
     minus = true;
     [z0, zT] = deal(zT, z0); % tausche Anfang und Ende
 elseif zT(1) == z0(1) % Keine Bewegung: sofortiges Beenden
@@ -95,12 +96,12 @@ elseif nz == 4 % Ruck-Trapez (Trapez-3)
     
     
 elseif nz>4
-    error('Berechnung von Trapez-Trajektorien h�herer Ordnung als 3 (Gefordert: %d) nicht m�glich.', nz-1);
+    error('Berechnung von Trapez-Trajektorien höherer Ordnung als 3 (Gefordert: %d) nicht möglich.', nz-1);
 end
 
-if minus % Pr�fe, ob Verlauf negativ ist
+if minus % Prüfe, ob Verlauf negativ ist
     ew_z(:, 2:end) = - ew_z(:, 2:end); % invertieren der Geschwindigkeiten
-    [z0, zT] = deal(zT, z0); % tausche Anfang und Ende zur�ck
+    [z0, zT] = deal(zT, z0); % tausche Anfang und Ende zurück
 end
 
 % Anfangswert setzen
