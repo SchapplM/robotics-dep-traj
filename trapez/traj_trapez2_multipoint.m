@@ -4,7 +4,7 @@
 % Simulink-Eingabe geeignet.
 % 
 % Input:
-% QL [PXN]
+% QL [PxN]
 %   P different Joint Positions
 % vmax [1x1] oder [1xN]
 %   Max Velocity: Same for every axis (1x1) or separate for each axis                
@@ -18,24 +18,24 @@
 %   Pause nach jeder Teil-Trajektorie (außer der letzten)
 % 
 % Output:
-% q_Arm_Full [MxN]
+% Q [MxN]
 %   Position Trajectory
-% qD_Arm_Full [MxN]
+% QD [MxN]
 %   Velocity Trajectory 
-% qDD_Arm_Full [MxN]
+% QDD [MxN]
 %   Acceleration Trajectory
 % t
 %   Zeit-Stützstellen der Trajektorie
-% IL [NP-1x1]
-%   Indizes der eingegebenen Eckwerte aus QL
+% IL [Px1]
+%   Indizes der eingegebenen Eckwerte aus QL in der Trajektorie Q
 % 
 % TODO: Unterschiedliche Geschwindigkeiten etc. zwischen allen Teilstücken
 % (vektorielle Eingabe der Parameter)
 
-% Moritz Schappler, schappler@irt.uni-hannover.de, 2016-10
-% (C) Institut für Regelungstechnik, Universität Hannover
+% Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2016-10
+% (C) Institut für Regelungstechnik, Leibniz Universität Hannover
 
-function [Q,QD,QDD,t,IL] = traj_trapez2_multipoint(QL, ...
+function [Q, QD, QDD, t, IL] = traj_trapez2_multipoint(QL, ...
   vmax, T2, T3, T_Abt, T_pause)
 
 Np = size(QL,1);
@@ -63,3 +63,4 @@ for i = 2:Np
   QDD = [QDD; Traj_i_qDD]; %#ok<AGROW>
   t = [t; Traj_i_t]; %#ok<AGROW>
 end
+IL(Np) = size(Q,1);
