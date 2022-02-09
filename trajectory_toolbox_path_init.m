@@ -9,3 +9,4 @@ addpath(this_tb_path);
 addpath(fullfile(this_tb_path, 'cone'));
 addpath(fullfile(this_tb_path, 'polynom'));
 addpath(fullfile(this_tb_path, 'trapez'));
+addpath(fullfile(this_tb_path, 'misc'));
